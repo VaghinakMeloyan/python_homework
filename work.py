@@ -1,60 +1,67 @@
-# Task_1
+# Task_2
 
-class Country:
-    def __init__(self, name, continent, *args, **kwargs):
+class Hotel:
+    def __init__(self, name, place, room_mid, mid_room_price, room_lux, lux_room_price, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.name = name
-        self.continent = continent
-        super().__init__(*args, **kwargs)
-    def present(self):
-        return f"{self.name} and {self.continent}"
+        self.place = place
+        self.room_mid = {"room1": "free", "room2": "free", "room3": "free"}
+        self.mid_room_price = mid_room_price
+        self.room_lux = {"room1": "free", "room2": "free", "room3": "free"}
+        self.lux_room_price = lux_room_price
 
-class Brand(Country):
-    def __init__(self, brande_name, business_start_date, *args, **kwargs):
-        self.brand_name = brande_name
-        self.business_start_date = business_start_date
-        super().__init__(*args, **kwargs)
-    def present(self):
-        return F"{self.brand_name} and {self.business_start_date}"
+    def presentation(self):
+        return self.name, self.place, self.room_mid, self.mid_room_price, self.room_lux, self.lux_room_price
 
+    def booking(self):
+        for i in self.room_mid.keys():
+            self.room_mid[i] = "busy"
+        return print(F"will book the rooms {self.room_mid}")
 
-class Season(Country):
-    def __init__(self, season_name, average_temperatur, *args, **kwargs):
-        self.season_name = season_name
-        self.average_temperatur = average_temperatur
-        super().__init__(*args, **kwargs)
-    def present(self):
-        return f"{self.season_name} and {self.average_temperatur}"
-
-class Product(Season, Brand):
-    def __init__(self, pruduct_name, product_type, product_price, product_quantity, *args, **kwargs):
-        self.product_name = pruduct_name
-        self.product_type = product_type
-        self.product_price = product_price
-        self.product_quantity = product_quantity
-        super().__init__(*args, **kwargs)
-
-    def present(self):
-        return f"presentetion of product will be {self.product_name, self.product_type, self.product_quantity}"
+    def avaliable_room_check(self):
+        check = True
+        for i in self.room_mid.values():
+            if i == "free":
+                check = True
+            else:
+                check = False
+        return check
 
     def discount(self):
-        return F"discount price with 20% will be {self.product_price - self.product_price * 20 / 100}"
-
-    def increase(self):
-        while True:
-            self.product_quantity += 1
-            print(self.product_quantity)
-
-    def decrease(self):
-        while self.product_quantity > 1:
-            self.product_quantity -= 1
-            print(self.product_quantity)
+        return F"{self.mid_room_price - self.mid_room_price * 30 / 100}"
 
 
-object_1 = Product("boots", "sport", 5000, 399, "Summer", 20, "Adidas", 2000, "Armenia", "Asia")
+class Taxi(Hotel):
+    def __init__(self, name, car_type, price_for_tour, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.name = name
+        self.car_type = car_type
+        self.price_for_tour = price_for_tour
 
-print(Product.__mro__)
+    def presentation(self):
+        return self.name, self.car_type, self.price_for_tour
 
-print(object_1.present())
-print(object_1.discount())
-# print(object_1.increase())
-print(object_1.decrease())
+    def discount(self):
+        return f"{self.price_for_tour - self.price_for_tour * 15 / 100}"
+
+
+class Tour(Taxi, Hotel):
+    def __init__(self, name,  *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.name = name
+        # self.price_mid = self.mid_room_price + self.price_for_tour
+        # self.price_lux = self.lux_room_price + self.price_for_tour
+
+    def global_presentation(self):
+        return print(F"we have middle services, in price{self.mid_room_price + self.price_for_tour} \n", F"we have lux services in price{self.lux_room_price + self.price_for_tour}")
+
+
+client_1 = Tour("Geghard_tur", "Bmw", "sedan", 10000, "Leran", "geghart", {},
+                20000, {}, 40000, )
+
+# print(Tour.__mro__)
+print(client_1.presentation())
+# print(client_1.booking())
+# print(client_1.discount())
+print(client_1.avaliable_room_check())
+print(client_1.global_presentation())
